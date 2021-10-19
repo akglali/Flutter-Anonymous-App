@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:responsiv_login_page_flutter/http_services/home_page_services.dart';
 
@@ -15,7 +16,6 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
 
   void initState() {
     super.initState();
-    HomePageService().getAllPost();
   }
 
   @override
@@ -93,78 +93,102 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
   }
 }
 
-class HomePageWidget extends StatelessWidget {
-  const HomePageWidget({
-    Key? key,
-  }) : super(key: key);
+class HomePageWidget extends StatefulWidget {
+  @override
+  State<HomePageWidget> createState() => _HomePageWidgetState();
+}
+
+class _HomePageWidgetState extends State<HomePageWidget> {
+  late List getAllPost;
+  bool loading = true;
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance!.addPostFrameCallback((timeStamp) {
+      getAllPostMethod();
+    });
+  }
+
+  void getAllPostMethod() async {
+    getAllPost = await HomePageService().getAllPost();
+    setState(() {
+      loading = false;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        Container(
-          margin: EdgeInsets.symmetric(horizontal: 20, vertical: 20),
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.all(Radius.circular(8)),
-            border: Border.all(color: Colors.redAccent,width: 3),
-          ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              Text(
-                "Nickname",
-                style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold),
+    return loading
+        ? SpinKitSpinningLines(
+      color: Colors.redAccent,
+      size: 100,
+      duration: Duration(seconds: 3),
+    )
+        : ListView.builder(
+            itemCount: getAllPost.length,
+            itemBuilder: (context, index) => Container(
+              margin: EdgeInsets.symmetric(horizontal: 20, vertical: 20),
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.all(Radius.circular(8)),
+                border: Border.all(color: getAllPost[index]["Color"], width: 7),
               ),
-              Padding(
-                padding: EdgeInsets.symmetric(vertical: 8, horizontal: 8),
-                child: Text(
-                  "This is the Post",
-                  style: TextStyle(fontSize: 20),
-                ),
-              ),
-              Text(
-                "20.06.12",
-                style: TextStyle(fontSize: 20),
-                textAlign: TextAlign.end,
-              ),
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: const [
-                    FaIcon(
-                      FontAwesomeIcons.heart,
-                      size: 40,
-                      color: Colors.black,
-                    ),
-                    Text(
-                      "2",
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  Text(
+                    getAllPost[index]["VirtualName"],
+                    style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+                  ),
+                  Padding(
+                    padding: EdgeInsets.symmetric(vertical: 8, horizontal: 8),
+                    child: Text(
+                      getAllPost[index]["TextContent"],
                       style: TextStyle(fontSize: 20),
                     ),
-                    FaIcon(
-                      FontAwesomeIcons.heartBroken,
-                      size: 40,
+                  ),
+                  Text(
+                    getAllPost[index]["DateCreated"],
+                    style: TextStyle(fontSize: 20),
+                    textAlign: TextAlign.end,
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        FaIcon(
+                          FontAwesomeIcons.heart,
+                          size: 40,
+                          color: Colors.black,
+                        ),
+                        Text(
+                          "${getAllPost[index]["Likes"]}",
+                          style: TextStyle(fontSize: 20),
+                        ),
+                        FaIcon(
+                          FontAwesomeIcons.heartBroken,
+                          size: 40,
+                        ),
+                        Text(
+                          "${getAllPost[index]["Dislikes"]}",
+                          style: TextStyle(fontSize: 20),
+                        ),
+                        Icon(
+                          Icons.comment,
+                          size: 40,
+                        ),
+                        Text(
+                          "${getAllPost[index]["CommentCount"]}",
+                          style: TextStyle(fontSize: 20),
+                        ),
+                      ],
                     ),
-                    Text(
-                      "2",
-                      style: TextStyle(fontSize: 20),
-                    ),
-                    Icon(
-                      Icons.comment,
-                      size: 40,
-                    ),
-                    Text(
-                      "2",
-                      style: TextStyle(fontSize: 20),
-                    ),
-                  ],
-                ),
+                  ),
+                ],
               ),
-            ],
-          ),
-        ),
-      ],
-    );
+            ),
+          );
   }
 }
 

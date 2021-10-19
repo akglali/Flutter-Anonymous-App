@@ -5,7 +5,7 @@ import 'package:responsiv_login_page_flutter/utils/secure_storage.dart';
 
 class LoginSignupService {
   String username, password;
-  String domain='http://10.44.65.119:8000/user/';
+  String domain='http://192.168.43.56:8000/user/';
 
   LoginSignupService({required this.username, required this.password});
 
