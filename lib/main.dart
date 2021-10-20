@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
-import 'package:responsiv_login_page_flutter/screens/home_page.dart';
+import 'package:responsiv_login_page_flutter/screens/main_sreen.dart';
 import 'package:responsiv_login_page_flutter/screens/login_screen.dart';
 import 'package:responsiv_login_page_flutter/utils/secure_storage.dart';
 
@@ -56,7 +56,7 @@ class _MyAppState extends State<MyApp> {
             duration: Duration(seconds: 3),
           ),
         ),
-      ) : isLoggedIn ?   HomePage(title:"Vibrany"):LoginScreen(title: "Vibrany"),
+      ) : isLoggedIn ?   MainScreen(title:"Vibrany"):LoginScreen(title: "Vibrany"),
     );
   }
 }

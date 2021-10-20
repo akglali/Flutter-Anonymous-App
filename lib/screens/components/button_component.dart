@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:responsiv_login_page_flutter/screens/home_page.dart';
+import 'package:responsiv_login_page_flutter/screens/main_sreen.dart';
 
 class ButtonComponent extends StatelessWidget {
   const ButtonComponent({
@@ -38,7 +38,7 @@ class ButtonComponent extends StatelessWidget {
                 Navigator.push(
                     context,
                     MaterialPageRoute(
-                        builder: (context) => HomePage(title: appBarText)));
+                        builder: (context) => MainScreen(title: appBarText)));
               }
             }
           },

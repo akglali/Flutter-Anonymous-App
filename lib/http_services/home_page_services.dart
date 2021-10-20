@@ -24,15 +24,15 @@ class HomePageService {
     "bg-pink-300": Colors.pink.shade300
   };
 
-  Future<List> getAllPost() async {
-    var url = Uri.parse('${domain}getallpost');
+  Future<List> getAllPost(int pageNumber) async {
+    var url = Uri.parse('${domain}getallpost/${pageNumber}');
     var response = await http.get(url);
     var body = jsonDecode(response.body);
     if (response.statusCode != 200) {
-      return (body["Error"]);
+      return [body];
     }
     for (var prop in body) {
-      prop["Color"]=map[prop["Color"]];
+      prop["Color"] = map[prop["Color"]];
     }
     return body;
   }
